@@ -1,0 +1,27 @@
+{
+  "name": "fullstack2018_osa3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "cd ../Fullstack2018/osa2/puhelinluettelo; npm start; cd ../../../Fullstack2018_osa3",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "node_modules/.bin/nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/salsam/HYFullstack2018_osa3.git"
+  },
+  "author": "salsam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/salsam/HYFullstack2018_osa3/issues"
+  },
+  "homepage": "https://github.com/salsam/HYFullstack2018_osa3#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.11"
+  }
+}
