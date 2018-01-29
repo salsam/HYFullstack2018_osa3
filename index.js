@@ -68,6 +68,19 @@ app.delete('/api/persons/:id', (req, res) => {
 app.post('/api/persons', (req, res) => {
     const person = req.body
     person.id=Math.floor(1000*Math.random())
+
+    if (person.nimi==='') {
+        return res.status(400).json({error: 'Nimi ei saa olla tyhjä!'})
+    }
+
+    if (person.numero==='') {
+        return res.status(400).json({error: 'Numero ei saa olla tyhjä!'})       
+    }
+
+    if (persons.find(vanha=>vanha.nimi===person.nimi)) {
+        return res.status(400).json({error: 'Nimi on jo käytössä!'})
+    }
+
     persons = persons.concat(person)
     res.json(person)
 })
