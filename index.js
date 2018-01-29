@@ -39,7 +39,7 @@ let persons = [
     }
 ]
 
-app.get(`api/persons`, (req, res) => {
+app.get('/api/persons', (req, res) => {
     res.status(200).json(persons)
 })
 
@@ -47,6 +47,14 @@ app.get('/info', (req, res) => {
     res.send(`<div>puhelinluettelossa ${persons.length} henkilöä</div><div>${new Date}</div>`)
 })
 
+app.get('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const person = persons.find(person => person.id===id)
+
+    person ?
+    res.json(person):
+    res.status(404).end()
+})
 
 const port=3001
 app.listen(port, () => {
