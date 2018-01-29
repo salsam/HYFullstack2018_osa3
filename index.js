@@ -1,6 +1,5 @@
 const express = require('express')
 const app = express()
-const baseUrl='/api'
 
 let persons = [
     {
@@ -40,8 +39,12 @@ let persons = [
     }
 ]
 
-app.get(`${baseUrl}/persons`, (req, res) => {
+app.get(`api/persons`, (req, res) => {
     res.status(200).json(persons)
+})
+
+app.get('/info', (req, res) => {
+    res.send(`<div>puhelinluettelossa ${persons.length} henkilöä</div><div>${new Date}</div>`)
 })
 
 
