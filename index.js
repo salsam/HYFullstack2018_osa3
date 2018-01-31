@@ -2,6 +2,10 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const cors = require('cors')
+
+app.use(cors())
+app.use(express.static('build'))
 
 morgan.token('data', (req,res) => (
     JSON.stringify(req.body)
@@ -73,17 +77,18 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     const person = req.body
+    console.log(person)
     person.id=Math.floor(1000*Math.random())
 
-    if (person.nimi==='') {
+    if (person.name==='') {
         return res.status(400).json({error: 'Nimi ei saa olla tyhjä!'})
     }
 
-    if (person.numero==='') {
+    if (person.number==='') {
         return res.status(400).json({error: 'Numero ei saa olla tyhjä!'})       
     }
 
-    if (persons.find(vanha=>vanha.nimi===person.nimi)) {
+    if (persons.find(old=>old.name===person.name)) {
         return res.status(400).json({error: 'Nimi on jo käytössä!'})
     }
 
