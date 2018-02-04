@@ -4,7 +4,7 @@ if ( process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
-//const url = 'mongodb://fullstack:sekred@ds223578.mlab.com:23578/fullstack-notes'
+//const url = 'mongodb://fullstack:sekred@ds223578.mlab.com:23578/puhlo'
 const url = process.env.MONGODB_URI
 
 mongoose.connect(url)
