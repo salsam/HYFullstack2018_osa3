@@ -53,19 +53,11 @@ let persons = [
     }
 ]
 
-const formatPerson = (person) => {
-    const formatted = { ...person._doc, id: person._id }
-    delete formatted._id
-    delete formatted.__v
-
-    return formatted
-}
-
 app.get('/api/persons', (req, res) => {
     Person
         .find({})
         .then(persons => {
-            res.json(persons.map(person => formatPerson(person)))
+            res.json(persons.map(Person.format))
         })
 })
 
@@ -77,7 +69,7 @@ app.get('/api/persons/:id', (req, res) => {
     Person
         .findById(req.params.id)
         .then(person => {
-            res.json(formatPerson(person))
+            res.json(Person.format(person))
         })
 })
 
@@ -115,8 +107,16 @@ app.post('/api/persons', (req, res) => {
     person
         .save()
         .then(saved => {
-            res.json(formatPerson(saved))
+            res.json(Person.format(saved))
         })
+})
+
+//TODO
+app.put('/api/persons/:id', (req, res) => {
+    const body = req.body
+    const id = req.params.id
+    console.log(body)
+    //Person.updateOne({ _id: id }, { number: body.number })
 })
 
 const PORT = process.env.PORT || 3001
