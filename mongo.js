@@ -18,12 +18,12 @@ if (process.argv.length === 4) {
         number: process.argv[3]
     })
     person.save()
-        .then(result => {
+        .then(() => {
             mongoose.connection.close()
         })
     console.log(`lisätään henkilö ${person.name} numero ${person.number} luetteloon`)
 } else {
-    console.log("puhelinluettelo:")
+    console.log('puhelinluettelo:')
     Person.find({})
         .then(result => {
             result.forEach(person => {

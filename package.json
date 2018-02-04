@@ -6,7 +6,8 @@
   "scripts": {
     "start": "cd ../Fullstack2018/osa2/puhelinluettelo; npm start; cd ../../../Fullstack2018_osa3",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "node_modules/.bin/nodemon index.js"
+    "watch": "node_modules/.bin/nodemon index.js",
+    "lint": "node_modules/.bin/eslint ."
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "morgan": "^1.9.0"
   },
   "devDependencies": {
+    "eslint": "^4.17.0",
     "nodemon": "^1.14.11"
   }
 }

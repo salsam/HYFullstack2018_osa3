@@ -8,7 +8,7 @@ const Person = require('./models/person')
 app.use(cors())
 app.use(express.static('build'))
 
-morgan.token('data', (req, res) => (
+morgan.token('data', (req) => (
     JSON.stringify(req.body)
 ))
 
@@ -50,9 +50,9 @@ app.get('/api/persons/:id', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    console.log("remove: ", req.params.id)
+    console.log('remove: ', req.params.id)
     Person.findByIdAndRemove(req.params.id)
-        .then(result => {
+        .then(() => {
             res.status(204).end()
         })
         .catch(error => {
@@ -93,7 +93,7 @@ app.post('/api/persons', (req, res) => {
 
 app.put('/api/persons/:id', (req, res) => {
     const body = req.body
-    console.log("PUT")
+    console.log('PUT')
     console.log(body)
 
     const person = {
