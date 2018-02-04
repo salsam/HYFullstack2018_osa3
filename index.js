@@ -30,8 +30,8 @@ app.get('/api/persons', (req, res) => {
 app.get('/info', (req, res) => {
     Person.count({}, (err, count) => {
         err ?
-        res.send('Error connecting to database!') :
-        res.send(`<div>puhelinluettelossa ${count} henkilöä</div><div>${new Date}</div>`) 
+            res.send('Error connecting to database!') :
+            res.send(`<div>puhelinluettelossa ${count} henkilöä</div><div>${new Date}</div>`)
     })
 })
 
@@ -45,19 +45,19 @@ app.get('/api/persons/:id', (req, res) => {
         })
         .catch(error => {
             console.log(error)
-            res.status(400).send({ message: {text: 'malformatted id', type: 'error' }})
+            res.status(400).send({ message: { text: 'malformatted id', type: 'error' } })
         })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    console.log("remove: ",req.params.id)
+    console.log("remove: ", req.params.id)
     Person.findByIdAndRemove(req.params.id)
         .then(result => {
             res.status(204).end()
         })
         .catch(error => {
             console.log(error)
-            res.status(400).send({ message: {text: 'malformatted id', type: 'error' }})
+            res.status(400).send({ message: { text: 'malformatted id', type: 'error' } })
         })
 })
 
@@ -65,28 +65,30 @@ app.post('/api/persons', (req, res) => {
     const body = req.body
 
     if (body.name === '') {
-        return res.status(400).json({ message: {text: 'Nimi ei saa olla tyhjä!', type: 'error' }})
+        return res.status(400).json({ message: { text: 'Nimi ei saa olla tyhjä!', type: 'error' } })
     }
 
     if (body.number === '') {
-        return res.status(400).json({ message: {text: 'Numero ei saa olla tyhjä!', type: 'error' }})
+        return res.status(400).json({ message: { text: 'Numero ei saa olla tyhjä!', type: 'error' } })
     }
-
-    console.log(body)
 
     const person = new Person({
         name: body.name,
         number: body.number
     })
 
-    console.log(person)
-
-    person
-        .save()
-        .then(saved => {
-            res.json(Person.format(saved))
+    Person.find({ name: person.name })
+        .then(match => {
+            console.log(match)
+            match.length>0 ?
+                res.status(400).send({ error: 'Name is already in use!' }) :
+                person
+                    .save()
+                    .then(saved => {
+                        res.json(Person.format(saved))
+                    })
+                    .catch(error => console.log(error))
         })
-        .catch(error => console.log(error))
 })
 
 app.put('/api/persons/:id', (req, res) => {
@@ -102,13 +104,13 @@ app.put('/api/persons/:id', (req, res) => {
     console.log(person)
 
     Person.findByIdAndUpdate(req.params.id, person, { new: true })
-    .then(updatedNote => {
-        res.json(Person.format(updatedNote))
-    })
-    .catch(error => {
-        console.log(error)
-        res.status(400).send({ error: 'malformatted id'})
-    })
+        .then(updatedNote => {
+            res.json(Person.format(updatedNote))
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(400).send({ error: 'malformatted id' })
+        })
 })
 
 const PORT = process.env.PORT || 3001
