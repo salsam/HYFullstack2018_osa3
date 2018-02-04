@@ -3,11 +3,12 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
 
 app.use(cors())
-app.use(express.static('build')) 
+app.use(express.static('build'))
 
-morgan.token('data', (req,res) => (
+morgan.token('data', (req, res) => (
     JSON.stringify(req.body)
 ))
 
@@ -52,8 +53,20 @@ let persons = [
     }
 ]
 
+const formatPerson = (person) => {
+    const formatted = { ...person._doc, id: person._id }
+    delete formatted._id
+    delete formatted.__v
+
+    return formatted
+}
+
 app.get('/api/persons', (req, res) => {
-    res.status(200).json(persons)
+    Person
+        .find({})
+        .then(persons => {
+            res.json(persons.map(person => formatPerson(person)))
+        })
 })
 
 app.get('/info', (req, res) => {
@@ -61,39 +74,49 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const person = persons.find(person => person.id === id)
-
-    person ?
-        res.json(person) :
-        res.status(404).end()
+    Person
+        .findById(req.params.id)
+        .then(person => {
+            res.json(formatPerson(person))
+        })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    persons = persons.filter(person => person.id !== id)
+    const id = req.params.id
+    Person.findById(id)
+        .then(person => {
+            person
+                .remove()
+                .then(a => console.log(a))
+        })
     res.status(204).end()
 })
 
 app.post('/api/persons', (req, res) => {
-    const person = req.body
-    console.log(person)
-    person.id=Math.floor(1000*Math.random())
+    const body = req.body
 
-    if (person.name==='') {
-        return res.status(400).json({error: 'Nimi ei saa olla tyhjä!'})
+    if (body.name === '') {
+        return res.status(400).json({ error: 'Nimi ei saa olla tyhjä!' })
     }
 
-    if (person.number==='') {
-        return res.status(400).json({error: 'Numero ei saa olla tyhjä!'})       
+    if (body.number === '') {
+        return res.status(400).json({ error: 'Numero ei saa olla tyhjä!' })
     }
 
-    if (persons.find(old=>old.name===person.name)) {
-        return res.status(400).json({error: 'Nimi on jo käytössä!'})
+    if (persons.find(old => old.name === body.name)) {
+        return res.status(400).json({ error: 'Nimi on jo käytössä!' })
     }
 
-    persons = persons.concat(person)
-    res.json(person)
+    const person = new Person({
+        name: body.name,
+        number: body.number
+    })
+
+    person
+        .save()
+        .then(saved => {
+            res.json(formatPerson(saved))
+        })
 })
 
 const PORT = process.env.PORT || 3001
