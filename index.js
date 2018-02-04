@@ -15,40 +15,24 @@ morgan.token('data', (req, res) => (
 app.use(bodyParser.json())
 app.use(morgan(':method :url :data :status :res[content-length] :response-time ms'))
 
-let persons = [
-    {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        "id": 1
-    },
-    {
-        "name": "Martti Tienari",
-        "number": "040-123456",
-        "id": 2
-    },
-    {
-        "name": "Arto Järvinen",
-        "number": "040-123456",
-        "id": 3
-    },
-    {
-        "name": "Lea Kutvonen",
-        "number": "040-123456",
-        "id": 4
-    }
-]
-
 app.get('/api/persons', (req, res) => {
     Person
         .find({})
         .then(persons => {
             res.json(persons.map(Person.format))
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+            console.log(error)
+            res.status(404).end()
+        })
 })
 
 app.get('/info', (req, res) => {
-    res.send(`<div>puhelinluettelossa ${persons.length} henkilöä</div><div>${new Date}</div>`)
+    Person.count({}, (err, count) => {
+        err ?
+        res.send('Error connecting to database!') :
+        res.send(`<div>puhelinluettelossa ${count} henkilöä</div><div>${new Date}</div>`) 
+    })
 })
 
 app.get('/api/persons/:id', (req, res) => {
