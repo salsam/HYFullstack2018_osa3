@@ -59,6 +59,7 @@ app.get('/api/persons', (req, res) => {
         .then(persons => {
             res.json(persons.map(Person.format))
         })
+        .catch(error => console.log(error))
 })
 
 app.get('/info', (req, res) => {
@@ -71,6 +72,7 @@ app.get('/api/persons/:id', (req, res) => {
         .then(person => {
             res.json(Person.format(person))
         })
+        .catch(error => console.log(error))
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -81,6 +83,7 @@ app.delete('/api/persons/:id', (req, res) => {
                 .remove()
                 .then(a => console.log(a))
         })
+        .catch(error => console.log(error))
     res.status(204).end()
 })
 
@@ -109,6 +112,7 @@ app.post('/api/persons', (req, res) => {
         .then(saved => {
             res.json(Person.format(saved))
         })
+        .catch(error => console.log(error))
 })
 
 //TODO
